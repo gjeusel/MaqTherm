@@ -1,0 +1,47 @@
+SCOREP_REGION_NAMES_BEGIN 
+EXCLUDE
+kernel_mod.kernel_gradient_
+renormalization_matrix_mod.renormalization_matrix_
+muscl_gradient_mod.muscl_gradient_
+tait_equation.tait_sound_speed_
+mortoncode.getmask_
+interactions_t_mod.updateinteractions_t_
+streamcompaction1_mod.splitseq_template_name_
+mathtools.vec_prod_
+ghosts.isghostvisiblefrom_
+mortoncode.aremortoncodesintersect_
+mortoncode.mortonencode_fortran_
+octants_t_mod.findcells_
+octants_t_modfindcells.deferredbinarysearch_
+mathtools.solvecubicequation_
+renormalisation_inversion_mod.renormalize_particle_
+tait_equation.tait_pressure_
+muscl_gradient_renormalized_mod.renormalize_muscl_gradient_
+ghosts.ghosts_preparation_
+streamcompaction1_mod.compactseq_template_name_
+streamcompaction1_mod.radixsort_template_name_
+arrayreallocation_mod.reallocateifneeded_i_
+initialize_particle_mod.initialize_particle_
+tait_equation.tait_density_ghost_
+ghosts.generatebodyghostparticles_
+searchgrid_mod.placeparticleingrid_
+mathtools.is_outside_
+mathtools.interact_outside_
+octants_t_mod.getneighborcells_
+mathtools.circlein3pointsbasis_
+face.destroy_linkedlist_face_
+ghosts.corner2dvelocity_
+face.add_face_to_linkedlist_
+tait_equation.tait_density_
+
+SCOREP_REGION_NAMES_END
+
+
+#SCOREP_FILE_NAMES_BEGIN
+#EXCLUDE *
+#INCLUDE /users/gjeusel/sph-flow-benchmark/src/Parallelism.F90
+#INCLUDE /users/gjeusel/sph-flow-benchmark/src/Interactions/Interaction_TVR_Fluid_Monaghan.F90
+#INCLUDE /users/gjeusel/sph-flow-benchmark/src/Models/TVR.F90
+#SCOREP_FILE_NAMES_END
+
+
