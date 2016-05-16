@@ -1,8 +1,27 @@
 cmake_minimum_required(VERSION 3.3)
+
+# Handle superbuild first
+option(USE_SUPERBUILD "Whether or not a superbuild should be invoked" ON)
+
+#if(USE_SUPERBUILD)
+#  project(SUPERBUILD NONE)
+#  # execute the superbuild (this script will be invoked again without the USE_SUPERBUILD option this time)
+#  include(cmake/SuperBuild.cmake)
+#  return() # stop processing this file further
+#else()
+#  project(maqTherm)
+#endif()
+
 project(maqTherm)
 enable_language(CXX C)
 
-# sanitize the build directory
+# Nomination of the version by the date of the release
+set(maqTherm_MAJOR_VERSION 16)
+set(maqTherm_MINOR_VERSION 05)
+set(maqTherm_PATCH_VERSION 0)
+set(maqTherm_VERSION ${maqTherm_MAJOR_VERSION}.${maqTherm_MINOR_VERSION}.${maqTherm_PATCH_VERSION})
+
+# Sanitize the build directory
 set(MAQTHERM_BUILD_NAME     "" CACHE STRING "maqTherm configuration name")
 set(MAQTHERM_BUILD_NAME_DIR .  CACHE STRING "maqTherm configuration directory")
 
@@ -13,6 +32,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin CACHE PATH "Single di
 
 #-----------------------------------------------------------------------------
 # - Compiling types availables
+
+# CMAKE_BUILD_TYPE_STRINGS_EXTRA can be altered by the toolchain to add compile types
 set(CMAKE_BUILD_TYPE_STRINGS " " "Debug" "Release" ${CMAKE_BUILD_TYPE_STRINGS_EXTRA})
 set(CMAKE_BUILD_TYPE_PREFIX_STRINGS "")
 foreach(type ${CMAKE_BUILD_TYPE_STRINGS})
@@ -26,27 +47,31 @@ foreach(type "" ${CMAKE_BUILD_TYPE_PREFIX_STRINGS})
   message(STATUS "CMAKE_CXX_FLAGS${type_UP}=${CMAKE_CXX_FLAGS${type_UP}}")
 endforeach()
 
+#-----------------------------------------------------------------------------
+# Compilers details
+
 if(CMAKE_CXX_COMPILER MATCHES "gfortran" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffree-line-length-none")
 endif()
 
 #-----------------------------------------------------------------------------
-# - option
-# - option_default
-# - option_desc
-# - option_values
+# Pré-compile options handling :
+
+# macro to simplify options_list appending
 macro(add_option opt default desc)
-  list(APPEND options ${opt})
+  list(APPEND options_list ${opt})
   set(${opt}_DEFAULT ${default} CACHE INTERNAL "")
   set(${opt}_DESC    ${desc} CACHE INTERNAL "")
   set(${opt}_VALUES  ${ARGN} CACHE INTERNAL "")
 endmacro()
 
+# pré-compile options :
 add_option(maqTherm_CALC 3D "Dimensionality" 2D;3D)
 
+# name's formalism about pre-compile options
 include(FeatureSummary)
 file(WRITE "${maqTherm_BINARY_DIR}/maqTherm_options.cmake" "")
-foreach(opt ${options})
+foreach(opt ${options_list})
   if("${${opt}_VALUES}" MATCHES "ON;OFF")
     option(${opt} ${${opt}_DESC} ${${opt}_DEFAULT})
     add_feature_info(${opt} ${${opt}} "")
@@ -75,7 +100,6 @@ foreach(opt ${options})
   endif()
 endforeach()
 
-
 FEATURE_SUMMARY(WHAT ENABLED_FEATURES  DESCRIPTION "Enable Features:")
 FEATURE_SUMMARY(WHAT DISABLED_FEATURES DESCRIPTION "Disabled features:")
 
@@ -98,13 +122,18 @@ foreach(keyword ${DISABLED_KEYWORDS})
   endif()
 endforeach()
 
-
+# Adding -D[list of options ON]
 add_definitions(${definitions})
 
+
+#---------------------------------------------------------------------
+# Source files handling
+
 configure_file(${maqTherm_SOURCE_DIR}/config.h.in ${maqTherm_BINARY_DIR}/config.h  @ONLY)
-include_directories(${CMAKE_CXX_MODULE_DIRECTORY})
+
+# set up include-directories
 include_directories(${maqTherm_BINARY_DIR})
-#include_directories("${maqTherm_SOURCE_DIR}/src")
+include_directories("${maqTherm_SOURCE_DIR}/src")
 #include_directories("${maqTherm_SOURCE_DIR}/src/Declarations")
 #include_directories("${maqTherm_SOURCE_DIR}/src/Interactions/")
 #include_directories("${maqTherm_SOURCE_DIR}/src/Models")
@@ -114,6 +143,18 @@ include_directories(${maqTherm_BINARY_DIR})
 #  )
 
 add_executable(maqTherm.exe
-  ./src/main.cpp
+  #./src/main.cpp
+  ./src/simpletest.cpp
   #$<TARGET_OBJECTS:maqTherm_mockup_objs_cxx>
   )
+
+
+#---------------------------------------------------------------------
+# External Libraries handling
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+
+find_package(Boost REQUIRED)
+include_directories(${Boost_INCLUDE_DIRS})
+
+#link_directories(/nix/store/sxpf6jwyq33xc5as8c46191r56xsil3g-cute-2.0/lib/)
+include_directories(/nix/store/idi2kfdmgilkmp8zid3ip82wbgpd3jdx-cute-2.0/include/)

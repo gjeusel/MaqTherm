@@ -1,11 +1,11 @@
 set(CMAKE_BUILD_TYPE Debug CACHE STRING "")
 
 # setting compilers
-set(CMAKE_C_COMPILER       clang   CACHE STRING "")
-set(CMAKE_CXX_COMPILER     clang++  CACHE STRING "")
+set(CMAKE_C_COMPILER   clang    CACHE STRING "")
+set(CMAKE_CXX_COMPILER clang++  CACHE STRING "")
 
-set(GFORTRAN_WARNINGS "-Warray-bounds -Wcharacter-truncation -Wconversion -Wimplicit-interface  -Wimplicit-procedure  -Wline-truncation -Wintrinsics-std  -Wsurprising  -Wno-tabs  -Wunderflow -Wunused-parameter")
-set(CMAKE_CXX_FLAGS_DEBUG "${GFORTRAN_WARNINGS} -g -pipe -fno-omit-frame-pointer  -fbounds-check -fbacktrace" CACHE STRING "")
+set(GFORTRAN_WARNINGS "-Weverything")
+set(CMAKE_CXX_FLAGS_DEBUG "${GFORTRAN_WARNINGS} -g" CACHE STRING "")
 set(CMAKE_CXX_FLAGS_RELEASE "-pipe -O3 -ftree-vectorize" CACHE STRING "")
 
 set(REPORT_FLAGS " -opt-report=5 -opt-report-phase=loop,vec -opt-report-file=compil_report.txt")
