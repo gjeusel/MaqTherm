@@ -139,13 +139,14 @@ include_directories("${maqTherm_SOURCE_DIR}/src")
 #include_directories("${maqTherm_SOURCE_DIR}/src/Models")
 
 
-#add_library(maqTherm_mockup_objs_cxx OBJECT
-#  )
+add_library(maqTherm_mockup_objs_cxx OBJECT
+  ./src/Personnage.cpp
+  ./src/Arme.cpp
+  )
 
 add_executable(maqTherm.exe
-  #./src/main.cpp
-  ./src/simpletest.cpp
-  #$<TARGET_OBJECTS:maqTherm_mockup_objs_cxx>
+  $<TARGET_OBJECTS:maqTherm_mockup_objs_cxx>
+  ./src/main.cpp
   )
 
 
