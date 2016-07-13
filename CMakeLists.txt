@@ -142,6 +142,7 @@ include_directories("${maqTherm_SOURCE_DIR}/src")
 add_library(maqTherm_mockup_objs_cxx OBJECT
   ./src/Personnage.cpp
   ./src/Arme.cpp
+  ./src/Duree.cpp
   )
 
 add_executable(maqTherm.exe
